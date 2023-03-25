@@ -3,35 +3,38 @@
 namespace App\XQL\Classes\Traits;
 
 use App\XQL\Classes\XQLField;
+use App\XQL\Classes\XQLModel;
 use App\XQL\Classes\XQLObject;
-
+use DOMDocument;
+use SimpleXMLElement;
 trait GeneratesXML
 {
-
-    protected function xml(XQLModel $model): string
+    protected function xml(XQLModel $model, bool $formatted = false): string
     {
-        $data = $this->binded($model);
-        $xml = new SimpleXMLElement("<{$data->name()}></{$data->name()}>");
+        $data = $this->binded();
+        $xml = new SimpleXMLElement("<{$this->name()}></{$this->name()}>");
         foreach($data->labels() as $label) $xml->addAttribute($label->name(), $label->get());
         foreach($data->children() as $child) {
             $xml = $this->append($child, $xml);
         }
-        return $xml->asXML();
+        return ($formatted) ? $this->formatXML($xml->asXML()) : $xml->asXML();
     }
 
-    protected function append(XQLObject $child, SimpleXMLElement $xml): SimpleXMLElement
+    protected function formatXML(string $input) {
+        $doc = new DOMDocument;
+        $doc->preserveWhiteSpace = false;
+        $doc->loadXML($input);
+        $doc->formatOutput = true;
+        return $doc->saveXML();
+    }
+
+    protected function append(XQLObject $child, SimpleXMLElement $node): SimpleXMLElement
     {
         foreach($child->children() as $next) {
-            if($next instanceof XQLField) $xml->addChild($next->name(), $next->get());
-            else $node = $xml->addChild($next->name());
-            if(isset($node)) $xml = $this->append($next, $node);
-       }
-        return $xml;
+            echo $next->name . "\n";
+            if($next instanceof XQLField) $node->addChild($next->name, $next->value());
+            else if($next instanceof XQLObject) $this->append($next, $node->addChild($next->name));
+        }
+        return $node;
     }
-
-    protected function binded(): XQLObject
-    {
-        return $this;
-    }
-
 }

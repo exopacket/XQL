@@ -16,7 +16,6 @@ class Results extends XQLModel
         $event->field("event_description")->value("Test Event Description");
 
         $model->attach(Session::class);
-
     }
 
     public static function test() {
