@@ -8,6 +8,7 @@ use \SQLite3;
 class DBX extends \SQLite3
 {
     protected string $filename = "/home/ryan/test-db.sqlite";
+
     public function __construct(bool $createSchema)
     {
         parent::__construct($this->filename);
