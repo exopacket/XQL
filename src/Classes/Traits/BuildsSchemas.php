@@ -15,19 +15,23 @@ trait BuildsSchemas
     protected function bind(string|XQLObject $from, string $reference, string $name = null): XQLBinding
     {
         $name = (!isset($name) && $from instanceof XQLObject) ? get_class($from) : $name ?? $from;
-        return new XQLBinding($name, $from, $reference);
+        return XQLBinding::store($name, $from, $reference);
     }
 
     //create new basic field <field>value</field>
     protected function field(string $name): XQLField
     {
-        return new XQLField(null, $name);
+        $object = new XQLField(null, $name);
+        $this->objects[] = $object;
+        return $object;
     }
 
     //generate field value based on a callback
     protected function generate($name, callable $value): XQLField
     {
-        return new XQLField($value(), $name);
+        $object = new XQLField($value(), $name);
+        $this->objects[] = $object;
+        return $object;
     }
 
     protected function dynamic(string $name, array $params, XQLObject $from, callable $callable): XQLField
@@ -38,7 +42,7 @@ trait BuildsSchemas
     }
 
     //new "branch" in the forrest full of "trees"
-    protected function &branch(string $name): XQLObject
+    protected function branch(string $name): XQLObject
     {
         $object = new XQLObject($name);
         $this->objects[] = $object;
@@ -46,7 +50,7 @@ trait BuildsSchemas
     }
 
     //new global attribute on absolutely anything with optional binding
-    protected function &label(string|callable $value, string $name, string|XQLObject $from = null, string $reference = null): XQLObject
+    protected function label(string|callable $value, string $name, string|XQLObject $from = null, string $reference = null): XQLObject
     {
         $attribute = new XQLAttribute();
         $this->labels[] = $attribute;

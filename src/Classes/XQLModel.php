@@ -1,15 +1,16 @@
 <?php
 
+namespace App\XQL\Classes;
+
 use App\XQL\Classes\Traits\BuildsModels;
 use App\XQL\Classes\Traits\BuildsQueries;
-use App\XQL\Classes\Traits\GeneratesXML;
 use App\XQL\Classes\Types\XQLBindingType;
-use App\XQL\Classes\XQLObject;
-
+use DOMDocument;
+use SimpleXMLElement;
 
 abstract class XQLModel extends XQLObject {
 
-    use BuildsQueries, BuildsModels, GeneratesXML;
+    use BuildsQueries, BuildsModels;
 
     /*
      *
@@ -36,7 +37,9 @@ abstract class XQLModel extends XQLObject {
     protected array $trees;
     protected XQLBindingType $outflowType;
 
-    abstract protected function schema($model);
+    public function __construct() { $this->build(); parent::__construct(); }
+
+    abstract protected function schema(XQLModel $model);
 
     protected function build()
     {
@@ -50,7 +53,48 @@ abstract class XQLModel extends XQLObject {
 
     public function export()
     {
-        $string = $this->xml($this);
+        //$this->build();
+        $string = $this->xml($this, true);
+        echo $string;
+    }
+
+    public function children(): array
+    {
+        return $this->trees ?? [];
+    }
+
+    protected function xml(XQLModel $model, bool $formatted = false): string
+    {
+        $data = $this->binded();
+        $xml = new SimpleXMLElement("<{$this->name()}></{$this->name()}>");
+        foreach($data->labels() as $label) $xml->addAttribute($label->name(), $label->get());
+        foreach($data->children() as $child) {
+            $xml = $this->append($child, $xml);
+        }
+        return ($formatted) ? $this->formatXML($xml->asXML()) : $xml->asXML();
+    }
+
+    protected function formatXML(string $input) {
+        $doc = new DOMDocument;
+        $doc->preserveWhiteSpace = false;
+        $doc->loadXML($input);
+        $doc->formatOutput = true;
+        return $doc->saveXML();
+    }
+
+    protected function append(XQLObject $child, SimpleXMLElement $node): SimpleXMLElement
+    {
+        foreach($child->children() as $next) {
+            echo $next->name . "\n";
+            if($next instanceof XQLField) $node->addChild($next->name, $next->value());
+            else if($next instanceof XQLObject) $this->append($next, $node->addChild($next->name));
+        }
+        return $node;
+    }
+
+    protected function binded(): XQLObject
+    {
+        return $this;
     }
 
 }

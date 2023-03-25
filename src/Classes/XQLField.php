@@ -9,12 +9,12 @@ class XQLField extends XQLObject
 
     protected XQLDataType $dataType;
     protected $value;
+    protected bool $required = false;
 
     public function __construct($value = null, $name = null, $dataType = null)
     {
         if(isset($value)) $this->value = $value;
         if(isset($dataType)) $this->dataType = $dataType;
-        $name = (isset($name)) ? $name : get_class($this);
         parent::__construct($name);
     }
 
@@ -28,9 +28,10 @@ class XQLField extends XQLObject
         return $this->dataType;
     }
 
-    public function get()
+    public function required($required = null)
     {
-        
+        if(isset($required)) $this->required = $required;
+        return $this->required;
     }
 
 }

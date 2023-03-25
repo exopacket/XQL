@@ -2,8 +2,8 @@
 
 namespace App\XQL\Classes\Types;
 
-enum XQLBindingType
+enum XQLBindingType: int
 {
-    case FROM_APP;
-    case TO_APP;
+    case DB_TO_FILE = 1;
+    case FILE_TO_DB = 2;
 }
