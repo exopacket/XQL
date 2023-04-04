@@ -12,10 +12,20 @@ trait BuildsSchemas
 {
 
     //bind an XML file to DB or vice versa
-    protected function bind(string|XQLObject $from, string $reference, string $name = null): XQLBinding
+    protected function bind(string|XQLObject $from, string|array $reference, string $name = null): XQLBinding
     {
         $name = (!isset($name) && $from instanceof XQLObject) ? get_class($from) : $name ?? $from;
-        return XQLBinding::store($name, $from, $reference);
+        $references = [];
+        if(is_array($reference)) $references = $reference;
+        else $references = [$reference];
+        return XQLBinding::store($name, $from, $references);
+    }
+
+    //bind all DB fields to XML
+    protected function bindAll(string|XQLObject $from, string $name = null): XQLBinding
+    {
+        $name = (!isset($name) && $from instanceof XQLObject) ? get_class($from) : $name ?? $from;
+        return XQLBinding::store($name, $from, "*");
     }
 
     //create new basic field <field>value</field>
@@ -26,7 +36,7 @@ trait BuildsSchemas
         return $object;
     }
 
-    //generate field value based on a callback
+    //generate field value based on an anonymous functions
     protected function generate($name, callable $value): XQLField
     {
         $object = new XQLField($value(), $name);
@@ -34,6 +44,7 @@ trait BuildsSchemas
         return $object;
     }
 
+    //generate field value based on an analytic or use case specific function's return value
     protected function dynamic(string $name, array $params, XQLObject $from, callable $callable): XQLField
     {
         $args = $params; //TODO get all parameters from `$from` with names in `$params` as arguments for the callable
@@ -41,7 +52,7 @@ trait BuildsSchemas
         return new XQLField($v, $name);
     }
 
-    //new "branch" in the forrest full of "trees"
+    //new "branch" in the forest full of "trees"
     protected function branch(string $name): XQLObject
     {
         $object = new XQLObject($name);
@@ -50,11 +61,25 @@ trait BuildsSchemas
     }
 
     //new global attribute on absolutely anything with optional binding
-    protected function label(string|callable $value, string $name, string|XQLObject $from = null, string $reference = null): XQLObject
+//    protected function label(string|callable $value, string $name, string|XQLObject $from = null, string $reference = null): XQLObject
+//    {
+//        $attribute = new XQLAttribute();
+//        $this->labels[] = $attribute;
+//        return $attribute;
+//    }
+
+    protected function cache(): void
     {
-        $attribute = new XQLAttribute();
-        $this->labels[] = $attribute;
-        return $attribute;
+        $this->cached = true;
+    }
+
+    protected function multiple(string $name): void {
+        $this->multiple = true;
+        $this->name = $name;
+    }
+
+    protected function enforced(): void {
+        $this->enforced = true;
     }
 
 }

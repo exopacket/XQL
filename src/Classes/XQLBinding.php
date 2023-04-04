@@ -9,18 +9,18 @@ class XQLBinding extends XQLObject
 {
 
     protected string $bindFrom;
-    protected string $reference;
-    protected string $bindType;
+    protected array $references;
+    protected XQLBindingType $bindType;
 
-    public function __construct(string $name, string $from, string $reference, XQLBindingType $type)
+    public function __construct(string $name, string $from, array $references, XQLBindingType $type)
     {
         $this->name = $name;
         $this->bindFrom = $from;
-        $this->reference = $reference;
+        $this->references = $references;
         $this->bindType = $type;
     }
 
-    public static function store(string $name, string|XQLObject $from, string $reference): XQLBinding
+    public static function store(string $name, string|XQLObject $from, array $references): XQLBinding
     {
         if ($from instanceof XQLObject) {
             $type = XQLBindingType::FILE_TO_DB;
@@ -29,8 +29,8 @@ class XQLBinding extends XQLObject
             $type = XQLBindingType::DB_TO_FILE;
             $fromName = $from;
         }
-        DBX::relationship($reference, $name, $type);
-        return new XQLBinding($name, $fromName, $reference, $type);
+        DBX::relationship();
+        return new XQLBinding($name, $fromName, $references, $type);
     }
 
 }

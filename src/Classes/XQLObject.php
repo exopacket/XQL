@@ -11,6 +11,9 @@ class XQLObject
     protected array $objects;
     protected array $labels;
     protected string $name;
+    protected bool $cached = false;
+    protected bool $multiple = false;
+    protected bool $enforced = false;
 
     public function __construct($name = null)
     {
@@ -31,4 +34,8 @@ class XQLObject
         return $this->objects ?? [];
     }
 
+    public function attributes(): array
+    {
+        return [];
+    }
 }

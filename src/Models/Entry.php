@@ -4,7 +4,7 @@ namespace App\XQL\Models;
 
 use App\XQL\Classes\XQLModel;
 
-class Session extends XQLModel
+class Entry extends XQLModel
 {
 
     protected function schema(XQLModel $model)
