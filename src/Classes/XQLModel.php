@@ -11,30 +11,7 @@ abstract class XQLModel extends XQLObject {
 
     use BuildsQueries, BuildsModels, GeneratesXML;
 
-    /*
-     *
-     *   Person
-     *      Full Name [nickname]
-     *      Gender [preferred pronouns]
-     *      Favorite Colors
-     *          red [shade]
-     *          blue [shade]
-     *
-     *  =======================================================
-     *
-     *  <person>
-     *      <full_name>Ryan Fitzgerald</full_name>
-     *      <gender pronouns="...">male</gender>
-     *      <favorite_colors>
-     *          <color shade="#f00">red</color>
-     *          <color shade="#00f">blue</color>
-     *      </favorite_colors>
-     *  </person>
-     * 
-     */
-
-    protected array $trees;
-    protected XQLBindingType $bindingType;
+    protected array $trees = [];
 
     public function __construct() { $this->build(); parent::__construct(); }
 
@@ -45,20 +22,15 @@ abstract class XQLModel extends XQLObject {
         $this->schema($this);
     }
 
-    protected function objectify()
-    {
-
-    }
-
-    public function export()
+    protected function export(): string
     {
         $string = $this->xml($this, true);
-        echo $string;
+        return $string;
     }
 
     public function children(): array
     {
-        return $this->trees ?? [];
+        return array_merge($this->trees, $this->objects);
     }
 
     protected function binded(): XQLObject

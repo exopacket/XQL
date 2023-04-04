@@ -7,29 +7,43 @@ use Aws\S3\S3Client;
 class S3
 {
 
-    private string $region;
-    private string $key;
-    private string $secret;
     private string $bucket;
 
-    private S3Client $client;
+    private S3Client $s3;
 
     public function __construct()
     {
 
-        $this->region = config("xql.s3.region");
-        $this->key = config("xql.s3.key");
-        $this->secret = config("xql.s3.secret");
+        $region = config("xql.s3.region");
+        $key = config("xql.s3.key");
+        $secret = config("xql.s3.secret");
         $this->bucket = config("xql.s3.bucket");
 
-        $credentials = new Aws\Credentials\Credentials($this->key, $this->secret);
-
-        $s3 = new S3Client([
+        $this->s3 = new S3Client([
             'version' => 'latest',
-            'region' => $this->region,
-            'credentials' => $credentials
+            'region' => $region,
+            'credentials' => [
+                'key'    => $key,
+                'secret' => $secret,
+            ],
         ]);
 
+    }
+
+    public function put(string $key, string $content) {
+        $this->s3->putObject([
+            'Bucket' => $this->bucket,
+            'Key' => $key,
+            'Body' => $content
+        ]);
+    }
+
+    public function get(string $key) {
+       $res = $this->s3->getObject([
+            'Bucket' => $this->bucket,
+            'Key' => $key
+        ]);
+       return $res['Body'];
     }
 
 }

@@ -9,17 +9,20 @@ class Results extends XQLModel
 
     protected function schema(XQLModel $model)
     {
-        //create schema, relationships, and so forth
 
-        $event = $model->root("event");
-        $event->field("EventName")->value("Test Event");
-        $event->field("event_description")->value("Test Event Description");
+        $model->field("test");
+//        $model->bindAll("results", "info");
+//        $model->attach(Session::class);
+//        $model->attach(Entry::class)->multiple("entries");
 
-        $model->attach(Session::class);
     }
 
-    public static function test() {
-        (new Results())->export();
+    public static function test()
+    {
+        $res = (new Results)->create([
+            "test" => "Hello World"
+        ]);
+        dd($res->export());
     }
 
 }
