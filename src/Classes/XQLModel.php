@@ -24,7 +24,7 @@ abstract class XQLModel extends XQLObject {
 
     protected function export(): string
     {
-        $string = $this->xml($this, true);
+        $string = $this->xml(true);
         return $string;
     }
 

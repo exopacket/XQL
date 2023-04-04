@@ -3,6 +3,7 @@
 namespace App\XQL\Classes;
 
 use App\XQL\Classes\Traits\BuildsSchemas;
+use SimpleXMLElement;
 
 class XQLObject
 {
@@ -10,6 +11,7 @@ class XQLObject
 
     protected array $objects;
     protected array $labels;
+    protected array $checksums;
     protected string $name;
     protected bool $cached = false;
     protected bool $multiple = false;
@@ -34,8 +36,36 @@ class XQLObject
         return $this->objects ?? [];
     }
 
-    public function attributes(): array
+    public function checksums(): array
     {
-        return [];
+        $this->checksums ?? $this->checksums = [];
+        $this->hmac();
+        return $this->checksums;
+    }
+
+    private function hmac(): void
+    {
+        $xml = new SimpleXMLElement("<{$this->name()}></{$this->name()}>");
+        foreach($this->children() as $child) {
+            if(is_array($child) && count($child) === 1) $child = array_values($child)[0];
+            $this->traverse($child, ($child instanceof XQLField) ? $xml : $xml->addChild($child->name()));
+        }
+        $key = "abc";// config("XQL_HMAC_KEY");
+        $content = $xml->asXML();
+        $this->checksums[] = new XQLAttribute("md", substr(hash_hmac("sha256", $content, $key), 0, 20));
+    }
+
+    protected function traverse(XQLObject $child, SimpleXMLElement $node): SimpleXMLElement
+    {
+        if(count($child->children()) > 0) {
+            foreach ($child->children() as $next) {
+                if(is_array($next) && count($next) === 1) $next = array_values($next)[0];
+                if ($next instanceof XQLField) $node->addChild($next->name(), $next->value());
+                else if ($next instanceof XQLObject) $this->traverse($next, $node->addChild($next->name()));
+            }
+        } else {
+            if ($child instanceof XQLField) $node->addChild($child->name(), $child->value());
+        }
+        return $node;
     }
 }
