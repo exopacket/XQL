@@ -22,7 +22,7 @@ trait BuildsModels
     //"plant" an already created "tree"
     protected function plant(XQLObject $object, string $name = null): XQLObject
     {
-        $name = (isset($name)) ? $name : get_class($object);
+        $name = (isset($name)) ? $name : $object->name();
         $this->trees[] = [ $name => $object ];
         return $object;
     }
