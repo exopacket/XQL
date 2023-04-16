@@ -11,7 +11,7 @@ class Session extends XQLModel
     {
         //create schema, relationships, and so forth
 
-        $model->bindAll("sessions", "info");
+        $model->bindAll("sessions", "info")->enforced();
 
     }
 

@@ -68,18 +68,21 @@ trait BuildsSchemas
 //        return $attribute;
 //    }
 
-    protected function cache(): void
+    protected function cache()
     {
         $this->cached = true;
+        return $this;
     }
 
-    protected function multiple(string $name): void {
+    protected function multiple(string $name = null) {
         $this->multiple = true;
-        $this->name = $name;
+        if(isset($name)) $this->name = $name;
+        return $this;
     }
 
-    protected function enforced(): void {
+    protected function enforced() {
         $this->enforced = true;
+        return $this;
     }
 
 }

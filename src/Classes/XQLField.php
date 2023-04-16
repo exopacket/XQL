@@ -20,6 +20,7 @@ class XQLField extends XQLObject
 
     public function value($value = null) {
         if(isset($value)) $this->value = $value;
+        if($this->multiple && isset($this->values) && count($this->values) > 0) return $this->values;
         return $this->value;
     }
 

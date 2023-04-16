@@ -35,6 +35,33 @@ trait GeneratesXML
         if(count($child->children()) > 0) {
             foreach ($child->children() as $next) {
                 if(is_array($next) && count($next) === 1) $next = array_values($next)[0];
+                if ($next instanceof XQLField) {
+                    if($next->isMultiple() && is_array($next->value())) {
+                        foreach($next->value() as $value) $node->addChild($next->name(), $value);
+                    } else {
+                        $node->addChild($next->name(), $next->value());
+                    }
+                }
+                else if ($next instanceof XQLObject) $this->append($next, $node->addChild($next->name()));
+            }
+        } else {
+            if ($child instanceof XQLField) {
+                if($child->isMultiple() && is_array($child->value())) {
+                    foreach($child->value() as $value) $node->addChild($child->name(), $value);
+                } else {
+                    $node->addChild($child->name(), $child->value());
+                }
+            }
+        }
+        //foreach($child->checksums() as $attr) if(!isset($node[$attr->name()])) $node->addAttribute($attr->name(), $attr->get());
+        return $node;
+    }
+
+    protected function _append(XQLObject $child, SimpleXMLElement $node): SimpleXMLElement
+    {
+        if(count($child->children()) > 0) {
+            foreach ($child->children() as $next) {
+                if(is_array($next) && count($next) === 1) $next = array_values($next)[0];
                 if ($next instanceof XQLField) $node->addChild($next->name(), $next->value());
                 else if ($next instanceof XQLObject) $this->append($next, $node->addChild($next->name()));
             }

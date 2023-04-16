@@ -11,32 +11,20 @@ class Results extends XQLModel
     protected function schema(XQLModel $model)
     {
 
-        $model->field("test");
-
-        $obj = new XQLObject("generic");
-        $obj->field("test1")->value("test1");
-        $obj->field("test2")->value("test2");
-        $obj->field("test3")->value("test3");
-        $model->plant($obj);
-
-        $obj = new XQLObject("generic");
-        $obj->field("test1")->value("test1");
-        $obj->field("test2")->value("test2");
-        $obj->field("test3")->value("test3");
-        $model->plant($obj);
-
-
-
-//        $model->bindAll("results", "info");
-//        $model->attach(Session::class);
-//        $model->attach(Entry::class)->multiple("entries");
+        //$model->bindAll("results", "info")->enforced();
+        //$model->attach(Session::class)->enforced();
+        //$model->attach(Entry::class)->multiple("entries");
+        $model->field("test1")->enforced();
+        $model->field("test2")->enforced()->multiple();
+        $model->field("test3");
 
     }
 
     public static function test()
     {
-        $res = (new Results)->create([
-            "test" => "Hello World"
+        $res = Results::create([
+            'test1' => 'Hello',
+            'test2' => ['World', 'And', 'Universe']
         ]);
         dd($res->export());
     }
