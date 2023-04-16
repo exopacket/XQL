@@ -17,6 +17,7 @@ class Results extends XQLModel
         $model->field("test1")->enforced();
         $model->field("test2")->enforced()->multiple();
         $model->field("test3");
+        $model->bindAll("persons")->where("id")->multiple("person");
 
     }
 
@@ -24,7 +25,10 @@ class Results extends XQLModel
     {
         $res = Results::create([
             'test1' => 'Hello',
-            'test2' => ['World', 'And', 'Universe']
+            'test2' => ['World', 'And', 'Universe'],
+            'persons' => [
+                'id' => 1
+            ]
         ]);
         dd($res->export());
     }

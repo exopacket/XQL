@@ -14,6 +14,7 @@ class XQLObject
     protected array $checksums;
     protected array $values;
     protected string $name;
+    protected string $singularName;
     protected bool $cached = false;
     protected bool $multiple = false;
     protected bool $enforced = false;
@@ -71,9 +72,15 @@ class XQLObject
         return $node;
     }
 
-    public function appendValue($value)
+    public function appendMultiple($value)
     {
         $this->values[] = $value;
+    }
+
+    public function appendChild(XQLObject $child)
+    {
+        if(!isset($this->objects)) $this->objects = [$child];
+        else $this->objects[] = $child;
     }
 
     /**

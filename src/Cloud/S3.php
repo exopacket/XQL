@@ -2,6 +2,7 @@
 
 namespace App\XQL\Cloud;
 
+use App\XQL\Classes\Utils\Env;
 use Aws\S3\S3Client;
 
 class S3
@@ -14,10 +15,10 @@ class S3
     public function __construct()
     {
 
-        $region = config("xql.s3.region");
-        $key = config("xql.s3.key");
-        $secret = config("xql.s3.secret");
-        $this->bucket = config("xql.s3.bucket");
+        $region = Env::get("XQL_AWS_S3_REGION");
+        $key = Env::get("XQL_AWS_S3_KEY");
+        $secret = Env::get("XQL_AWS_S3_SECRET");
+        $this->bucket = Env::get("XQL_AWS_S3_BUCKET");
 
         $this->s3 = new S3Client([
             'version' => 'latest',

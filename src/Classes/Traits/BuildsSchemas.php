@@ -18,14 +18,18 @@ trait BuildsSchemas
         $references = [];
         if(is_array($reference)) $references = $reference;
         else $references = [$reference];
-        return XQLBinding::store($name, $from, $references);
+        $object = XQLBinding::store($name, $from, $references);
+        $this->objects[] = $object;
+        return $object;
     }
 
     //bind all DB fields to XML
     protected function bindAll(string|XQLObject $from, string $name = null): XQLBinding
     {
         $name = (!isset($name) && $from instanceof XQLObject) ? get_class($from) : $name ?? $from;
-        return XQLBinding::store($name, $from, "*");
+        $object = XQLBinding::store($name, $from, []);
+        $this->objects[] = $object;
+        return $object;
     }
 
     //create new basic field <field>value</field>
@@ -76,7 +80,8 @@ trait BuildsSchemas
 
     protected function multiple(string $name = null) {
         $this->multiple = true;
-        if(isset($name)) $this->name = $name;
+        if(isset($name)) $this->singularName = $name;
+        else $this->singularName = $this->name;
         return $this;
     }
 
