@@ -17,15 +17,47 @@ class XQLBindingClause
         return $conditions;
     }
 
-    public function where(string $column, string $key = null) {
-        $this->and();
-        $this->append($column, $key);
+    public function where(string|array|callable $column, string $key = null) {
+        if(is_array($column)) {
+            $hasKeys = array_keys($column) !== range(0, count($column) - 1);
+            $keys = ($hasKeys) ? array_keys($column) : $column;
+            $values = ($hasKeys) ? array_values($column) : $column;
+            for ($i = 0; $i < count($column); $i++) {
+                $this->clause->and();
+                $this->clause->append($keys[$i], $values[$i]);
+            }
+        } else if(is_callable($column)) {
+            $this->clause->and();
+            $clause = new XQLBindingClause();
+            $this->clause->appendGroup($clause);
+            $column($clause);
+        } else {
+            $this->clause->and();
+            $this->clause->append($column, (isset($key)) ? $key : $column);
+        }
+        return $this;
     }
 
-    public function orWhere(string $column, string $key = null)
+    public function orWhere(string|array|callable $column, string $key = null)
     {
-        $this->or();
-        $this->append($column, $key);
+        if(is_array($column)) {
+            $hasKeys = array_keys($column) !== range(0, count($column) - 1);
+            $keys = ($hasKeys) ? array_keys($column) : $column;
+            $values = ($hasKeys) ? array_values($column) : $column;
+            for($i=0; $i<count($column); $i++) {
+                $this->clause->or();
+                $this->clause->append($keys[$i], $values[$i]);
+            }
+        } else if(is_callable($column)) {
+            $this->clause->or();
+            $clause = new XQLBindingClause();
+            $this->clause->appendGroup($clause);
+            $column($clause);
+        } else {
+            $this->clause->or();
+            $this->clause->append($column, (isset($key)) ? $key : $column);
+        }
+        return $this;
     }
 
     public function append(string $column, string $key) {
@@ -55,7 +87,7 @@ class XQLBindingClause
     {
         if(count($this->conditions) === 0) return $this;
         $this->conditions[] = [
-            "condition" => "or"
+            "condition" => "and"
         ];
         return $this;
     }
