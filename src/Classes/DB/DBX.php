@@ -41,9 +41,18 @@ class DBX
         $toBind = $res[1];
 
         $stmt = $con->prepare($query);
-        for($i=1; $i<=count($toBind); $i++) {
-            $condition = $toBind[$i-1];
-            $stmt->bindValue($i, $condition['value']);
+        $order = 1;
+        for($i=0; $i<count($toBind); $i++) {
+            $condition = $toBind[$i];
+            if(is_array($condition['value'])) {
+                foreach($condition['value'] as $value) {
+                    $stmt->bindValue($order, $value);
+                    $order++;
+                }
+            } else {
+                $stmt->bindValue($order, $condition['value']);
+                $order++;
+            }
         }
         $stmt->execute();
 
@@ -61,9 +70,21 @@ class DBX
                 if(!array_key_exists($condition['key'], $equals)) {
                     throw new Exception("Missing value for " . $condition['key'] . " (the column `" . $condition['column'] . "`).");
                 }
-                $condition['value'] = $equals[$condition['key']];
-                $values[] = $condition;
-                $query .= " `" . $condition['column'] . "` = ?";
+                if(is_array($equals[$condition['key']])) {
+                    $condition['value'] = $equals[$condition['key']];
+                    $values[] = $condition;
+                    $query .= " `" . $condition['column'] . "` IN (";
+                    $first = true;
+                    foreach($equals[$condition['key']] as $ignored) {
+                        $query .= ($first) ? "?" : ", ?";
+                        $first = false;
+                    }
+                    $query .= ")";
+                } else {
+                    $condition['value'] = $equals[$condition['key']];
+                    $values[] = $condition;
+                    $query .= " `" . $condition['column'] . "` = ?";
+                }
             } else if(is_array($condition)) {
                 $res = self::parseWhere($query, $condition, $equals, $values);
                 $query = $res[0];

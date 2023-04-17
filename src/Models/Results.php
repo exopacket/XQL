@@ -27,7 +27,7 @@ class Results extends XQLModel
             'test1' => 'Hello',
             'test2' => ['World', 'And', 'Universe'],
             'persons' => [
-                'id' => 1
+                'id' => [1, 2]
             ]
         ]);
         dd($res->export());
