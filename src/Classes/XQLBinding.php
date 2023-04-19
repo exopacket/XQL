@@ -44,7 +44,7 @@ class XQLBinding extends XQLObject
         foreach($values as $value) {
             $name = $this->singular['snake'];
             $object = new XQLObject($name);
-            $object->xpathFromParent($parent->xpath());
+            $object->xpathFromParent($parent->xpath(), true);
             $keys = array_keys($value);
             foreach($keys as $key) {
                 $field = new XQLField($value[$key], $key);
