@@ -14,20 +14,22 @@ class Results extends XQLModel
         //$model->bindAll("results", "info")->enforced();
         //$model->attach(Session::class)->enforced();
         //$model->attach(Entry::class)->multiple("entries");
-        $model->field("test1")->enforced();
-        $model->field("test2")->enforced()->multiple();
-        $model->field("test3");
-        $model->bindAll("persons")->where("id")->multiple("person");
+        $model->field("TestOne")->enforced();
+        $model->field("test_two")->enforced()->multiple();
+        $model->field("testThree");
+        $model->bindAll("persons")->where("id")->orWhere("name")->multiple();
 
     }
 
     public static function test()
     {
         $res = Results::create([
-            'test1' => 'Hello',
-            'test2' => ['World', 'And', 'Universe'],
+            'testOne' => 'Hello',
+            'TestTwo' => ['World', 'And', 'Universe'],
+            'test_three' => "Exclamation Point",
             'persons' => [
-                'id' => [1, 2]
+                'id' => 2,
+                "name" => "Person 2"
             ]
         ]);
         dd($res->export());

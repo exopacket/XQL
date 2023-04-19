@@ -3,6 +3,7 @@
 namespace App\XQL\Classes\Traits;
 
 use App\XQL\Classes\DB\DBX;
+use App\XQL\Classes\Utils\DynamicArr;
 use App\XQL\Classes\Utils\Env;
 use App\XQL\Classes\XQLBinding;
 use App\XQL\Classes\XQLField;
@@ -22,9 +23,11 @@ trait BuildsQueries
     public static function create(array $values): XQLModel
     {
         $class = get_called_class();
-        $instance = new $class();
+        $instance = new $class(['id' => null]);
         self::iterate($instance, $instance, $values);
-        //Cloud::put("tests/test2", $instance->export());
+        $path = $instance->modelKey(true) . "/" . $instance->id() . ".xml";
+        Cloud::put($path, $instance->export());
+        DBX::instanceCreated($instance);
         return $instance;
     }
 
@@ -32,52 +35,42 @@ trait BuildsQueries
 
         if(!isset($dataObject)) $dataObject = $instance;
 
+        $dArr = new DynamicArr($values);
+
         foreach($object->children() as $child) {
 
             if($child instanceof XQLField) {
-                if(array_key_exists($child->name(), $values)) {
-                    if($child->isMultiple() && is_array($values[$child->name()])) {
-                        foreach($values[$child->name()] as $value) $child->appendMultiple($value);
-                        $dataObject->{$child->name()} = $values[$child->name()];
+                if($dArr->exists($child->name())) {
+                    $dKey = $dArr->find($child->name());
+                    if($child->isMultiple() && is_array($values[$dKey])) {
+                        foreach($values[$dKey] as $value) $child->appendMultiple($value);
+                        $dataObject->{$child->name()} = $values[$dKey];
                     } else {
-                        $dataObject->{$child->name()} = $values[$child->name()];
-                        $child->value($values[$child->name()]);
+                        $dataObject->{$child->name()} = $values[$dKey];
+                        $child->value($values[$dKey]);
                     }
                 } else if($child->isEnforced()) {
                     throw new Exception($child->name() . " is required.");
                 }
             } else if($child instanceof XQLBinding) {
-                if(array_key_exists($child->name(), $values)) {
-                    $child->retrieve($values[$child->name()]);
+                if($dArr->exists($child->name())) {
+                    $dKey = $dArr->find($child->name());
                     $dataObject->{$child->name()} = (object)[];
-                    self::iterate($instance, $child, $values[$child->name()], $dataObject->{$child->name()});
+                    $child->retrieve($values[$dKey]);
+                    self::iterate($instance, $child, $values[$dKey], $dataObject->{$child->name()});
                 } else if($child->isEnforced()) {
                     throw new Exception($child->name() . " binding values are required.");
                 }
             } else {
-                if(array_key_exists($child->name(), $values)) {
+                if($dArr->exists($child->name())) {
+                    $dKey = $dArr->find($child->name());
                     $dataObject->{$child->name()} = (object)[];
-                    self::iterate($instance, $child, $values[$child->name()], $dataObject->{$child->name()});
+                    self::iterate($instance, $child, $values[$dKey], $dataObject->{$child->name()});
                 }
             }
 
         }
 
-    }
-
-    public function _create(array $values): XQLModel
-    {
-        $keys = array_keys($values);
-        foreach($keys as $key) {
-            $this->{$key} = $values[$key];
-            foreach($this->children() as $child) {
-                if($child instanceof XQLField && $child->name() === $key) {
-                    $child->value($values[$key]);
-                }
-            }
-        }
-        //Cloud::put("tests/test", $this->export());
-        return $this;
     }
 
     public function update(): void

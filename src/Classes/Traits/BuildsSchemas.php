@@ -14,7 +14,7 @@ trait BuildsSchemas
     //bind an XML file to DB or vice versa
     protected function bind(string|XQLObject $from, string|array $reference, string $name = null): XQLBinding
     {
-        $name = (!isset($name) && $from instanceof XQLObject) ? get_class($from) : $name ?? $from;
+        $name = (!isset($name) && $from instanceof XQLObject) ? $this->className($from) : $name ?? $this->toClass($from);
         $references = [];
         if(is_array($reference)) $references = $reference;
         else $references = [$reference];
@@ -26,7 +26,7 @@ trait BuildsSchemas
     //bind all DB fields to XML
     protected function bindAll(string|XQLObject $from, string $name = null): XQLBinding
     {
-        $name = (!isset($name) && $from instanceof XQLObject) ? get_class($from) : $name ?? $from;
+        $name = (!isset($name) && $from instanceof XQLObject) ? $this->className($from) : $name ?? $this->toClass($from);
         $object = XQLBinding::store($name, $from, []);
         $this->objects[] = $object;
         return $object;
@@ -64,24 +64,14 @@ trait BuildsSchemas
         return $object;
     }
 
-    //new global attribute on absolutely anything with optional binding
-//    protected function label(string|callable $value, string $name, string|XQLObject $from = null, string $reference = null): XQLObject
-//    {
-//        $attribute = new XQLAttribute();
-//        $this->labels[] = $attribute;
-//        return $attribute;
-//    }
-
-    protected function cache()
+    protected function searchable()
     {
-        $this->cached = true;
+        $this->searchable = true;
         return $this;
     }
 
-    protected function multiple(string $name = null) {
+    protected function multiple() {
         $this->multiple = true;
-        if(isset($name)) $this->singularName = $name;
-        else $this->singularName = $this->name;
         return $this;
     }
 

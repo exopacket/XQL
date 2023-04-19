@@ -4,6 +4,7 @@ namespace App\XQL\Classes;
 
 use App\XQL\Classes\DB\DBX;
 use App\XQL\Classes\Types\XQLBindingType;
+use App\XQL\Classes\Types\XQLNamingConvention;
 
 class XQLBinding extends XQLObject
 {
@@ -20,6 +21,7 @@ class XQLBinding extends XQLObject
         $this->references = $references;
         $this->bindType = $type;
         $this->clause = new XQLBindingClause();
+        parent::__construct($name);
     }
 
     public static function store(string $name, string|XQLObject $from, array $references): XQLBinding
@@ -40,8 +42,7 @@ class XQLBinding extends XQLObject
         $references = (!isset($this->references) || count($this->references) == 0) ? "*" : $this->references;
         $values = DBX::getBindedValues($this->bindFrom, $references, $this->clause, $equals);
         foreach($values as $value) {
-            $name = $this->name;
-            if($this->multiple) $name = $this->singularName;
+            $name = $this->singular['snake'];
             $object = new XQLObject($name);
             $keys = array_keys($value);
             foreach($keys as $key) {

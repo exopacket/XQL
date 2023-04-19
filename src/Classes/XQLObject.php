@@ -3,31 +3,48 @@
 namespace App\XQL\Classes;
 
 use App\XQL\Classes\Traits\BuildsSchemas;
+use App\XQL\Classes\Traits\InflectsText;
+use App\XQL\Classes\Types\XQLNamingConvention;
 use SimpleXMLElement;
 
 class XQLObject
 {
-    use BuildsSchemas;
+    use BuildsSchemas, InflectsText;
 
     protected array $objects;
     protected array $labels;
     protected array $checksums;
     protected array $values;
     protected string $name;
-    protected string $singularName;
-    protected bool $cached = false;
+    protected array $singular;
+    protected array $plural;
+    protected bool $searchable = false;
     protected bool $multiple = false;
     protected bool $enforced = false;
 
     public function __construct($name = null)
     {
-        $basename = $name ?? (new \ReflectionClass($this))->getShortName();
-        if($basename != "XQLObject") $name = $basename;
-        $this->name = ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $name)), '_');
+        $className = $this->className();
+        if($className == "XQLObject" && !isset($name)) throw Exception("Basic XQLObject must be constructed with a name.");
+        $this->name = $name ?? $className;
+        $cases = $this->cases();
+        $this->plural = $cases['plural'];
+        $this->singular = $cases['singular'];
     }
 
     public function name(): string {
-        return $this->name ?? [];
+        return $this->name ?? $this->className();
+    }
+
+    public function groupName()
+    {
+        return $this->plural['snake'];
+    }
+
+    public function fieldName()
+    {
+        if(!isset($this->singular)) dd($this);
+        return $this->singular['snake'];
     }
 
     public function labels(): array {

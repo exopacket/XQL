@@ -4,6 +4,7 @@ namespace App\XQL\Classes\DB;
 
 use App\XQL\Classes\Utils\Env;
 use App\XQL\Classes\XQLBindingClause;
+use App\XQL\Classes\XQLModel;
 use Exception;
 use PDO;
 
@@ -12,9 +13,50 @@ class DBX
     private static PDO $data;
     private static PDO $xql;
 
-    public function bind()
+    public static function instanceCreated(XQLModel $instance)
     {
-        
+        self::connect();
+        self::insertInstance($instance);
+        self::insertSearchables($instance);
+        self::insertBindings($instance);
+        self::insertHooks($instance);
+        self::createHookTriggers($instance);
+        self::createBindingTriggers($instance);
+    }
+
+    private static function insertInstance(XQLModel $instance) {
+        $con = self::$xql;
+        $query = "INSERT INTO instances VALUES(?, ?, ?)";
+        $stmt = $con->prepare($query);
+        $stmt->bindValue(1, $instance->id());
+        $stmt->bindValue(2, $instance->modelKey());
+        $stmt->bindValue(3, $instance->modelKey(true));
+
+        $stmt->execute();
+    }
+
+    private static function insertSearchables(XQLModel $instance) {
+
+    }
+
+    private static function insertBindings(XQLModel $instance) {
+
+    }
+
+    private static function insertHooks(XQLModel $instance) {
+
+    }
+
+    private static function createHookTriggers(XQLModel $instance) {
+
+    }
+
+    private static function createBindingTriggers(XQLModel $instance) {
+
+    }
+
+    private static function createTable($con, $tableName) {
+
     }
 
     public static function getBindedValues(string $table, array|string $columns, XQLBindingClause $where, array $equals) {
