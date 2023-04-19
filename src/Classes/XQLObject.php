@@ -68,10 +68,10 @@ class XQLObject
         return $this->xpath;
     }
 
-    public function xpathFromParent(string $parentPath, bool $multiple = false)
+    public function xpathFromParent(string $parentPath)
     {
-        if($parentPath === "") $this->xpath = ($multiple) ? $this->groupName() : $this->fieldName();
-        else $this->xpath = $parentPath . "/" . ($multiple) ? $this->groupName() : $this->fieldName();
+        if($parentPath === "") $this->xpath = $this->fieldName();
+        else $this->xpath = $parentPath . "/" . $this->fieldName();
         return $this->xpath;
     }
 

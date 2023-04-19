@@ -44,7 +44,7 @@ class XQLBinding extends XQLObject
         foreach($values as $value) {
             $name = $this->singular['snake'];
             $object = new XQLObject($name);
-            $object->xpathFromParent($parent->xpath(), true);
+            $object->xpathFromParent($parent->xpath());
             $keys = array_keys($value);
             foreach($keys as $key) {
                 $field = new XQLField($value[$key], $key);
@@ -97,6 +97,11 @@ class XQLBinding extends XQLObject
             $this->clause->append($column, (isset($key)) ? $key : $column);
         }
         return $this;
+    }
+
+    public function fieldName()
+    {
+        return $this->snake($this->name);
     }
 
 }
