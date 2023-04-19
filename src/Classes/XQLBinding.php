@@ -44,11 +44,12 @@ class XQLBinding extends XQLObject
         foreach($values as $value) {
             $name = $this->singular['snake'];
             $object = new XQLObject($name);
+            $object->xpathFromParent($parent->xpath());
             $keys = array_keys($value);
             foreach($keys as $key) {
                 $field = new XQLField($value[$key], $key);
                 $object->appendChild($field);
-                $field->xpathFromParent($parent->xpath());
+                $field->xpathFromParent($object->xpath());
                 if($this->isSearchable()) DBX::insertSearchableValue($model, $field);
             }
             $this->objects[] = $object;
