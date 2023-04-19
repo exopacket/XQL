@@ -37,7 +37,7 @@ trait InflectsText
     {
         $string = $text;
         if(preg_match("/[A-Z]/", $string) > 0) {
-            $string = $this->snake(strtouppr(substr($string, 0, 1)) . substr($string, 1));
+            $string = $this->snake(strtoupper(substr($string, 0, 1)) . substr($string, 1));
         }
         $words = [$string];
         if(str_contains($string, "_")) {
