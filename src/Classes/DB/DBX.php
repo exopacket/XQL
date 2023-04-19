@@ -10,8 +10,8 @@ use PDO;
 
 class DBX
 {
-    private static PDO $data;
-    private static PDO $xql;
+    protected static PDO $data;
+    protected static PDO $xql;
 
     public static function instanceCreated(XQLModel $instance)
     {
@@ -24,7 +24,7 @@ class DBX
         self::createBindingTriggers($instance);
     }
 
-    private static function insertInstance(XQLModel $instance) {
+    protected static function insertInstance(XQLModel $instance) {
         $con = self::$xql;
         $query = "INSERT INTO instances VALUES(?, ?, ?)";
         $stmt = $con->prepare($query);
@@ -35,28 +35,53 @@ class DBX
         $stmt->execute();
     }
 
-    private static function insertSearchables(XQLModel $instance) {
+    protected static function insertSearchables(XQLModel $instance) {
 
     }
 
-    private static function insertBindings(XQLModel $instance) {
+    protected static function insertBindings(XQLModel $instance) {
 
     }
 
-    private static function insertHooks(XQLModel $instance) {
+    protected static function insertHooks(XQLModel $instance) {
 
     }
 
-    private static function createHookTriggers(XQLModel $instance) {
+    protected static function createHookTriggers(XQLModel $instance) {
 
     }
 
-    private static function createBindingTriggers(XQLModel $instance) {
+    protected static function createBindingTriggers(XQLModel $instance) {
 
     }
 
-    private static function createTable($con, $tableName) {
+    protected static function createTable(PDO $con, string $tableName, array $config)
+    {
+        $query = "CREATE TABLE IF NOT EXISTS " . $tableName . "( ";
+        $auto = !array_key_exists("primary", $config) && !array_key_exists("id", $config['columns']);
+        if($auto) {
+            $query .= "`id` int ";
+        }
+        $columns = array_keys($config['columns']);
+        for($i=0; $i<count($columns); $i++) {
+            if($i > 0 || $auto) $query .= ", ";
+            $columnName = $columns[$i];
+            $column = $config['columns'][$columnName];
+            $type = $column['type'];
+            $null = !isset($column['null']) || !(($column['null'] === 'not' || $column['null'] === 'no'));
+            $query .= "`" . $columnName . "` " . $type . (($null) ? '' : ' not') . ' null ';
+        }
+        if($auto) {
+            $query .= ", primary key (`id`) ";
+        } else {
+            $query .= ", primary key (`" . $config['primary'] . "`)";
+        }
+        $query .= " )";
+        $con->exec($query);
 
+        if($auto) {
+            $con->exec("alter table " . $tableName . " modify id int auto_increment");
+        }
     }
 
     public static function getBindedValues(string $table, array|string $columns, XQLBindingClause $where, array $equals) {
@@ -102,7 +127,7 @@ class DBX
         return $stmt->fetchAll();
     }
 
-    private static function parseWhere(string $query, array $conditions, array $equals, array $values = []): array
+    protected static function parseWhere(string $query, array $conditions, array $equals, array $values = []): array
     {
         if(count($conditions) == 0) return [$query . " 1", $values];
         foreach($conditions as $condition) {
@@ -136,7 +161,7 @@ class DBX
         return [$query, $values];
     }
     
-    private static function connect()
+    protected static function connect()
     {
         if(!isset(self::$data) || !isset(self::$xql)) {
             $xqlDriver = Env::get("XQL_DB_DRIVER");
@@ -161,7 +186,7 @@ class DBX
         }
     }
 
-    private static function mysql($host, $port, $database, $username, $password): PDO
+    protected static function mysql($host, $port, $database, $username, $password): PDO
     {
         $con = new PDO("mysql:host=$host;port=$port;dbname=$database", $username, $password);
         $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
