@@ -18,6 +18,7 @@ class XQLObject
     protected string $name;
     protected array $singular;
     protected array $plural;
+    protected string $xpath;
     protected bool $searchable = false;
     protected bool $multiple = false;
     protected bool $enforced = false;
@@ -43,7 +44,6 @@ class XQLObject
 
     public function fieldName()
     {
-        if(!isset($this->singular)) dd($this);
         return $this->singular['snake'];
     }
 
@@ -60,6 +60,19 @@ class XQLObject
         $this->checksums ?? $this->checksums = [];
         $this->hmac();
         return $this->checksums;
+    }
+
+    public function xpath(string $path = null)
+    {
+        if(isset($path)) $this->xpath = $path;
+        return $this->xpath;
+    }
+
+    public function xpathFromParent(string $parentPath)
+    {
+        if($parentPath === "") $this->xpath = $this->fieldName();
+        else $this->xpath = $parentPath . "/" . $this->fieldName();
+        return $this->xpath;
     }
 
     private function hmac(): void
@@ -98,6 +111,14 @@ class XQLObject
     {
         if(!isset($this->objects)) $this->objects = [$child];
         else $this->objects[] = $child;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSearchable(): bool
+    {
+        return $this->searchable;
     }
 
     /**

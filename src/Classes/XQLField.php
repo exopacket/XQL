@@ -15,6 +15,7 @@ class XQLField extends XQLObject
     {
         if(isset($value)) $this->value = $value;
         if(isset($dataType)) $this->dataType = $dataType;
+        else $this->dataType = XQLDataType::DYNAMIC;
         parent::__construct($name);
     }
 

@@ -13,4 +13,5 @@ enum XQLDataType: int
     case TIME = 7;
     case DATETIME = 8;
     case TIMESTAMP = 9;
+    case DYNAMIC = 10;
 }

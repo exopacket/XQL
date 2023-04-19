@@ -2,6 +2,7 @@
 
 namespace App\XQL\Classes\Traits;
 
+use App\XQL\Classes\Types\XQLDataType;
 use App\XQL\Classes\XQLAttribute;
 use App\XQL\Classes\XQLBinding;
 use App\XQL\Classes\XQLField;

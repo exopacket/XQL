@@ -2,9 +2,12 @@
 
 namespace App\XQL\Classes\DB;
 
+use App\XQL\Classes\Utils\DynamicValue;
 use App\XQL\Classes\Utils\Env;
 use App\XQL\Classes\XQLBindingClause;
+use App\XQL\Classes\XQLField;
 use App\XQL\Classes\XQLModel;
+use App\XQL\Classes\XQLObject;
 use Exception;
 use PDO;
 
@@ -12,6 +15,8 @@ class DBX
 {
     protected static PDO $data;
     protected static PDO $xql;
+
+    protected static array $searchables = [];
 
     public static function instanceCreated(XQLModel $instance)
     {
@@ -80,8 +85,108 @@ class DBX
         $con->exec($query);
 
         if($auto) {
-            $con->exec("alter table " . $tableName . " modify id int auto_increment");
+            $con->exec("alter table `" . $tableName . "` modify `id` int auto_increment");
         }
+    }
+
+    protected static function getSearchableFields(XQLModel $model)
+    {
+        if(isset(self::$searchables['$model'])) return;
+        self::connect();
+        $con = self::$xql;
+        $query = "SELECT id, field_name FROM models_with_searchable WHERE model_name=?";
+        $stmt = $con->prepare($query);
+        $stmt->bindValue(1, $model->modelKey());
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $arr = $stmt->fetchAll();
+        if(count($arr) > 0) self::$searchables = array_merge(array($model->modelKey() => $arr), self::$searchables);
+    }
+
+    public static function updateSearchableFields(XQLModel $instance, XQLObject $field)
+    {
+        self::getSearchableFields($instance);
+        if(isset(self::$searchables[$instance->modelKey()])) {
+            $searchables = array_column(self::$searchables[$instance->modelKey()],  "field_name");
+            if(in_array($field->fieldName(), $searchables)) return;
+            self::connect();
+            $con = self::$xql;
+            $insertQuery = "INSERT INTO models_with_searchable(`model_name`, `field_name`) VALUES(?, ?)";
+            $stmt = $con->prepare($insertQuery);
+            $stmt->bindValue(1, $instance->modelKey());
+            $stmt->bindValue(2, $field->fieldName());
+            $stmt->execute();
+            self::$searchables[$instance->modelKey()][] = $field->fieldName();
+        } else {
+            self::connect();
+            $con = self::$xql;
+            $insertQuery = "INSERT INTO models_with_searchable(`model_name`, `field_name`) VALUES(?, ?)";
+            $stmt = $con->prepare($insertQuery);
+            $stmt->bindValue(1, $instance->modelKey());
+            $stmt->bindValue(2, $field->fieldName());
+            $stmt->execute();
+            $tableName = $instance->modelKey(true) . "_searchable";
+            self::createTable($con, $tableName, [
+                'columns' => [
+                    'instance_id' => [
+                        'type' => 'varchar(255)'
+                    ],
+                    'xpath' => [
+                        'type' => 'varchar(255)'
+                    ],
+                    'field_name' => [
+                        'type' => 'varchar(255)'
+                    ],
+                    'field_type' => [
+                        'type' => 'varchar(255)'
+                    ],
+                    'string_value' => [
+                        'type' => 'text'
+                    ],
+                    'integer_value' => [
+                        'type' => 'int'
+                    ],
+                    'float_value' => [
+                        'type' => 'float'
+                    ],
+                    'datetime_value' => [
+                        'type' => 'timestamp'
+                    ]
+                ]
+            ]);
+        }
+    }
+
+    public static function insertSearchableValue(XQLModel $instance, XQLField $field, $value = null)
+    {
+        if(!isset($value)) $value = $field->value();
+        $instance_id = $instance->id();
+        $xpath = $field->xpath();
+        $field_name = $field->fieldName();
+        $field_type = $field->type();
+        $dynamic_values = (new DynamicValue($value))->all();
+
+        self::connect();
+        $con = self::$xql;
+
+        $tableName = $instance->modelKey(true) . "_searchable";
+
+        $query = "INSERT INTO `" . $tableName .
+            "` (`instance_id`, `xpath`, `field_name`, `field_type`, `string_value`, `integer_value`, `float_value`, `datetime_value`) VALUES(?,?,?,?,?,?,?,?)";
+
+        $stmt = $con->prepare($query);
+        $stmt->bindValue(1, $instance_id);
+        $stmt->bindValue(2, $xpath);
+        $stmt->bindValue(3, $field_name);
+        $stmt->bindValue(4, $field_type->value);
+        $stmt->bindValue(5, $dynamic_values['string']);
+        $stmt->bindValue(6, $dynamic_values['integer']);
+        $stmt->bindValue(7, $dynamic_values['float']);
+        $stmt->bindValue(8, $dynamic_values['timestamp']);
+
+        $stmt->execute();
+
     }
 
     public static function getBindedValues(string $table, array|string $columns, XQLBindingClause $where, array $equals) {

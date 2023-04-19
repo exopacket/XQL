@@ -16,7 +16,7 @@ class Results extends XQLModel
         //$model->attach(Entry::class)->multiple("entries");
         $model->field("TestOne")->enforced();
         $model->field("test_two")->enforced()->multiple();
-        $model->field("testThree");
+        $model->field("testThree")->searchable();
         $model->bindAll("persons")->where("id")->orWhere("name")->multiple();
 
     }
