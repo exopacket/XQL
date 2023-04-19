@@ -37,7 +37,7 @@ class XQLBinding extends XQLObject
         return new XQLBinding($name, $fromName, $references, $type);
     }
 
-    public function retrieve(array $equals) : void
+    public function retrieve(XQLModel $model, array $equals) : void
     {
         $references = (!isset($this->references) || count($this->references) == 0) ? "*" : $this->references;
         $values = DBX::getBindedValues($this->bindFrom, $references, $this->clause, $equals);
@@ -48,6 +48,7 @@ class XQLBinding extends XQLObject
             foreach($keys as $key) {
                 $field = new XQLField($value[$key], $key);
                 $object->appendChild($field);
+                if($this->isSearchable()) DBX::insertSearchableValue($model, $field);
             }
             $this->objects[] = $object;
         }

@@ -4,14 +4,12 @@ namespace App\XQL\Classes\Traits;
 
 use App\XQL\Classes\DB\DBX;
 use App\XQL\Classes\Utils\DynamicArr;
-use App\XQL\Classes\Utils\Env;
 use App\XQL\Classes\XQLBinding;
 use App\XQL\Classes\XQLField;
 use App\XQL\Classes\XQLModel;
 use App\XQL\Classes\XQLObject;
 use App\XQL\Cloud\Cloud;
 use Exception;
-use PDO;
 
 trait BuildsQueries
 {
@@ -67,7 +65,7 @@ trait BuildsQueries
                 if($dArr->exists($child->name())) {
                     $dKey = $dArr->find($child->name());
                     $dataObject->{$child->name()} = (object)[];
-                    $child->retrieve($values[$dKey]);
+                    $child->retrieve($instance, $values[$dKey]);
                     self::iterate($instance, $child, $values[$dKey], $xpath, $dataObject->{$child->name()});
                 } else if($child->isEnforced()) {
                     throw new Exception($child->name() . " binding values are required.");
