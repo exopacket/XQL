@@ -69,9 +69,4 @@ abstract class XQLModel extends XQLObject {
         return ($camelCase) ? $arr['camel'] : $arr['snake'];
     }
 
-    public function searchables()
-    {
-
-    }
-
 }

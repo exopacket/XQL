@@ -65,7 +65,7 @@ trait BuildsQueries
                 if($dArr->exists($child->name())) {
                     $dKey = $dArr->find($child->name());
                     $dataObject->{$child->name()} = (object)[];
-                    $child->retrieve($instance, $values[$dKey]);
+                    $child->retrieve($instance, $child, $values[$dKey]);
                     self::iterate($instance, $child, $values[$dKey], $xpath, $dataObject->{$child->name()});
                 } else if($child->isEnforced()) {
                     throw new Exception($child->name() . " binding values are required.");

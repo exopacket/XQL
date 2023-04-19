@@ -17,7 +17,7 @@ class Results extends XQLModel
         $model->field("TestOne")->enforced();
         $model->field("test_two")->enforced()->multiple();
         $model->field("testThree")->searchable();
-        $model->bindAll("persons")->where("id")->orWhere("name")->multiple();
+        $model->bindAll("persons")->where("id")->orWhere("name")->multiple()->searchable();
 
     }
 
@@ -28,7 +28,7 @@ class Results extends XQLModel
             'TestTwo' => ['World', 'And', 'Universe'],
             'test_three' => "Exclamation Point",
             'persons' => [
-                'id' => 2,
+                'id' => 1,
                 "name" => "Person 2"
             ]
         ]);
