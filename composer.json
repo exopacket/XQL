@@ -15,7 +15,7 @@
     "minimum-stability": "dev",
     "scripts": {
         "post-package-install": [
-            "@php src/bin/windsor init"
+            "php src/bin/windsor init"
         ]
     },
     "require": {
