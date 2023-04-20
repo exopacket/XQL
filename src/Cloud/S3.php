@@ -2,7 +2,7 @@
 
 namespace App\XQL\Cloud;
 
-use App\XQL\Classes\Utils\Env;
+use App\XQL\Core\Utils\Env;
 use Aws\S3\S3Client;
 
 class S3
