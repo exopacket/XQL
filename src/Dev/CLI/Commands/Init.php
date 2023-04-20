@@ -9,7 +9,7 @@ class Init extends Command
 {
     protected function handle(array $args, array $params, array $flags): bool
     {
-        $dir = realpath(".");
+        $dir = $this->projectDir;
         if(array_key_exists("dir", $params)) $dir = $params['dir'];
 
         $cwd = dirname(__FILE__);

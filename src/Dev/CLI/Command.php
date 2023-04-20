@@ -12,11 +12,13 @@ abstract class Command
 
     private App $_;
     private CommandCall $v;
+    protected string $projectDir;
 
-    public function __construct(App $app, CommandCall $call)
+    public function __construct(App $app, CommandCall $call, string $projectDir)
     {
         $this->_ = $app;
         $this->v = $call;
+        $this->projectDir = $projectDir;
         if(!$this->subcommand($this->v->subcommand, $this->v->args, $this->v->params, $this->v->flags)) {
             if(!$this->handle($this->v->args, $this->v->params, $this->v->flags)) {
                 //TODO
