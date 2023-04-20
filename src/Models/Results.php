@@ -4,6 +4,7 @@ namespace App\XQL\Models;
 
 use App\XQL\Classes\XQLModel;
 use App\XQL\Classes\XQLObject;
+use App\XQL\Cloud\Cloud;
 
 class Results extends XQLModel
 {
@@ -23,16 +24,21 @@ class Results extends XQLModel
 
     public static function test()
     {
-        $res = Results::create([
-            'testOne' => 'Hello',
-            'TestTwo' => ['World', 'And', 'Universe'],
-            'test_three' => "Exclamation Point",
-            'persons' => [
-                'id' => 1,
-                "name" => "Person 2"
-            ]
-        ]);
+        $id = "e0c7b34733893f0d89141c9a47924bc724131f67";
+        $res = Results::fetch($id);
         dd($res->export());
+//        $content = Cloud::get("results/$id.xml");
+//        dd(get_object_vars(simplexml_load_string($content)->children()));
+//        $res = Results::create([
+//            'testOne' => 'Hello',
+//            'TestTwo' => ['World', 'And', 'Universe'],
+//            'test_three' => "Exclamation Point",
+//            'persons' => [
+//                'id' => 1,
+//                "name" => "Person 2"
+//            ]
+//        ]);
+//        dd($res->export());
     }
 
 }

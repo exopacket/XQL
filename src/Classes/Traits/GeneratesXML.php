@@ -32,6 +32,7 @@ trait GeneratesXML
 
     protected function append(XQLObject $child, SimpleXMLElement $parent): SimpleXMLElement
     {
+
         if(count($child->children()) > 0) {
             $node = ($child->isMultiple()) ? $parent->addChild($child->groupName()) : $parent;
             foreach ($child->children() as $next) {

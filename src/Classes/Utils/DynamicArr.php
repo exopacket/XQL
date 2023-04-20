@@ -9,19 +9,26 @@ class DynamicArr
     use InflectsText;
 
     private array $arr;
+    private string $case;
 
-    public function __construct(array $arr)
+    public function __construct(array $arr, string $case = null)
     {
         $this->arr = $arr;
+        if(isset($this->case)) $this->case = $case;
     }
 
     public function exists(string $key): bool
     {
         if(array_key_exists($key, $this->arr)) return true;
         $cases = $this->cases($key);
-        $singular = array_values($cases['singular']);
-        $plural = array_values($cases['plural']);
-        $all = array_merge($singular, $plural);
+        $all = [];
+        if(!isset($this->case)) {
+            $singular = array_values($cases['singular']);
+            $plural = array_values($cases['plural']);
+            $all = array_merge($singular, $plural);
+        } else {
+            $all = array_values($cases[$this->case]);
+        }
         $keys = array_keys($this->arr);
         return count(array_intersect($all, $keys)) > 0;
     }
@@ -30,9 +37,14 @@ class DynamicArr
     {
         if(array_key_exists($key, $this->arr)) return $key;
         $cases = $this->cases($key);
-        $singular = array_values($cases['singular']);
-        $plural = array_values($cases['plural']);
-        $all = array_merge($singular, $plural);
+        $all = [];
+        if(!isset($this->case)) {
+            $singular = array_values($cases['singular']);
+            $plural = array_values($cases['plural']);
+            $all = array_merge($singular, $plural);
+        } else {
+            $all = array_values($cases[$this->case]);
+        }
         $keys = array_keys($this->arr);
         $intersect = array_intersect($all, $keys);
         if(count($intersect) > 0) {

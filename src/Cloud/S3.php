@@ -44,7 +44,7 @@ class S3
             'Bucket' => $this->bucket,
             'Key' => $key
         ]);
-       return $res['Body'];
+       return $res['Body']->getContents();
     }
 
 }

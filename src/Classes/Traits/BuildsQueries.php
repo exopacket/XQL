@@ -18,6 +18,13 @@ trait BuildsQueries
 
     }
 
+    public static function fetch(string $id)
+    {
+        $class = get_called_class();
+        $instance = new $class(['id' => $id]);
+        return $instance;
+    }
+
     public static function create(array $values): XQLModel
     {
         $class = get_called_class();

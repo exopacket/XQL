@@ -56,6 +56,26 @@ class XQLBinding extends XQLObject
         }
     }
 
+    public function parse(array $values, &$dataObject)
+    {
+        foreach($values as $element) {
+            $items = array_values(get_object_vars($element))[0];
+            foreach($items as $item) {
+                $value = get_object_vars($item);
+                $name = $this->singular['snake'];
+                $object = new XQLObject($name);
+                $keys = array_keys($value);
+                $dataObject->{$name} = (object)[];
+                foreach ($keys as $key) {
+                    $field = new XQLField($value[$key], $key);
+                    $object->appendChild($field);
+                    $dataObject->{$name}->{$field->name()} = $field->value();
+                }
+                $this->objects[] = $object;
+            }
+        }
+    }
+
     public function where(string|array|callable $column, string $key = null) {
         if(is_array($column)) {
             $hasKeys = array_keys($column) !== range(0, count($column) - 1);
