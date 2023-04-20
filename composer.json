@@ -2,7 +2,7 @@
     "name": "exopacket/xql",
     "description": "XQL",
     "keywords": [
-        "xql", "sql"
+        "xql", "sql", "xml"
     ],
     "type": "library",
     "license": "MIT",
@@ -13,12 +13,17 @@
         "homepage": "https://github.com/exopacket"
     }],
     "minimum-stability": "dev",
+    "scripts": {
+        "post-package-install": [
+            "@php src/bin/windsor init"
+        ]
+    },
     "require": {
         "php": "^8.1.0",
-        "doctrine/inflector": "^2.0.6"
+        "doctrine/inflector": "^2.0.6",
         "aws/aws-sdk-php": "^3.258",
         "vlucas/phpdotenv": "^5.5",
-        "minicli/minicli": "^3.2",
+        "minicli/minicli": "^3.2"
     },
     "autoload": {
         "psr-0": {
