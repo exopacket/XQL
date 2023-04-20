@@ -26,8 +26,8 @@
         "minicli/minicli": "^3.2"
     },
     "autoload": {
-        "psr-0": {
-            "XQL": "src/"
+        "psr-4": {
+            "XQL\\": "src/"
         }
     }
 }
