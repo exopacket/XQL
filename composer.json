@@ -13,14 +13,6 @@
         "homepage": "https://github.com/exopacket"
     }],
     "minimum-stability": "dev",
-    "scripts": {
-        "post-install-cmd": [
-            "@php src/bin/windsor init"
-        ],
-        "post-package-install" : [
-            "@php src/bin/windsor init"
-        ]
-    },
     "require": {
         "php": "^8.1.0",
         "doctrine/inflector": "^2.0.6",

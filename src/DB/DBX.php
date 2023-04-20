@@ -22,8 +22,6 @@ class DBX
     {
         self::connect();
         self::insertInstance($instance);
-        self::insertSearchables($instance);
-        self::insertBindings($instance);
         self::insertHooks($instance);
         self::createHookTriggers($instance);
         self::createBindingTriggers($instance);
@@ -38,14 +36,6 @@ class DBX
         $stmt->bindValue(3, $instance->modelKey(true));
 
         $stmt->execute();
-    }
-
-    protected static function insertSearchables(XQLModel $instance) {
-
-    }
-
-    protected static function insertBindings(XQLModel $instance) {
-
     }
 
     protected static function insertHooks(XQLModel $instance) {

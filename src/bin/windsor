@@ -10,9 +10,6 @@ if (!is_file($root_app . '/vendor/autoload.php')) {
 
 require $root_app . '/vendor/autoload.php';
 
-use Minicli\App;
-use Minicli\Command\CommandCall;
 use XQL\Dev\CLI\CommandRegistry;
-
 
 CommandRegistry::createApp($argv, $root_app);
