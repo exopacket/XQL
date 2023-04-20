@@ -14,7 +14,7 @@
     }],
     "minimum-stability": "dev",
     "scripts": {
-        "post-package-install": [
+        "post-install-cmd": [
             "php src/bin/windsor init"
         ]
     },
