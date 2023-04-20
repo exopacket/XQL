@@ -1,11 +1,10 @@
 <?php
 
-namespace App\XQL\Dev\CLI\Commands;
+namespace XQL\Dev\CLI\Commands;
 
 use XQL\Core\Traits\InflectsText;
 use XQL\Core\Utils\Env;
-use \XQL\Dev\CLI\Command;
-use XQL\Dev\CreateSchema;
+use XQL\Dev\CLI\Command;
 
 class Model extends Command
 {

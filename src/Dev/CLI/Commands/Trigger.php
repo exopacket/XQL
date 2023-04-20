@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Dev\CLI\Commands;
+namespace XQL\Dev\CLI\Commands;
 
-use \XQL\Dev\CLI\Command;
+use XQL\Dev\CLI\Command;
 use XQL\Dev\CreateSchema;
 
 class Trigger extends Command
