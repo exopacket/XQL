@@ -32,13 +32,13 @@ abstract class Command
         $subcommand = str_contains($subcommand, "_") ? $this->toClass($subcommand) : $subcommand;
         $cases = $this->cases($subcommand)['singular'];
         $func = null;
-        if(function_exists($cases['snake'])) {
+        if(method_exists(get_called_class(), $cases['snake'])) {
             $func = $cases['snake'];
-        } else if(function_exists($cases['camel'])) {
+        } else if(method_exists(get_called_class(), $cases['camel'])) {
             $func = $cases['camel'];
         }
         if(isset($func)) {
-            call_user_func($func, $args, $params, $flags);
+            $this->{$func}($args, $params, $flags);
             return true;
         }
         return false;
@@ -53,6 +53,12 @@ abstract class Command
     {
         $this->console()->info($message);
         $this->newline();
+    }
+
+    protected function success(string $message, bool $exit = false, int $exitCode = 0) {
+        $this->console()->success($message);
+        $this->newline();
+        if($exit) exit($exitCode);
     }
 
     protected function out(string $message)

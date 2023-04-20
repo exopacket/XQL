@@ -16,4 +16,13 @@ require $root_app . '/vendor/autoload.php';
 use Minicli\App;
 use Minicli\Command\CommandCall;
 
-\XQL\Dev\CLI\CommandRegistry::createApp($argv);
+//$app = new App();
+//$input = new CommandCall($argv);
+
+//$app->registerCommand('help', function() use ($app) {
+//    $app->getPrinter()->info("minicli help");
+//});
+//
+//$app->runCommand($input->getRawArgs());
+
+\App\XQL\Dev\CLI\CommandRegistry::createApp($argv);
