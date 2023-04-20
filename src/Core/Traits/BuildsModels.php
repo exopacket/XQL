@@ -1,14 +1,14 @@
 <?php
 
-namespace App\XQL\Core\Traits;
+namespace XQL\Core\Traits;
 
-use App\XQL\Core\Types\XQLHookType;
-use App\XQL\Core\XQLAttribute;
-use App\XQL\Core\XQLBinding;
-use App\XQL\Core\XQLField;
-use App\XQL\Core\XQLHook;
-use App\XQL\Core\XQLObject;
-use App\XQL\Core\XQLModel;
+use XQL\Core\Types\XQLHookType;
+use XQL\Core\XQLAttribute;
+use XQL\Core\XQLBinding;
+use XQL\Core\XQLField;
+use XQL\Core\XQLHook;
+use XQL\Core\XQLObject;
+use XQL\Core\XQLModel;
 use Dompdf\Exception;
 
 trait BuildsModels

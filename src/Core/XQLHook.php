@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Core;
+namespace XQL\Core;
 
-use App\XQL\Core\Types\XQLHookType;
+use XQL\Core\Types\XQLHookType;
 
 class XQLHook
 {

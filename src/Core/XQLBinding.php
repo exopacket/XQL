@@ -1,10 +1,10 @@
 <?php
 
-namespace App\XQL\Core;
+namespace XQL\Core;
 
-use App\XQL\Core\Types\XQLBindingType;
-use App\XQL\Core\Types\XQLNamingConvention;
-use App\XQL\DB\DBX;
+use XQL\Core\Types\XQLBindingType;
+use XQL\Core\Types\XQLNamingConvention;
+use XQL\DB\DBX;
 
 class XQLBinding extends XQLObject
 {

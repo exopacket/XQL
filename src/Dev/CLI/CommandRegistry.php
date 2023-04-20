@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Dev\CLI;
+namespace XQL\Dev\CLI;
 
-use App\XQL\Dev\CLI\Commands\Init;
+use XQL\Dev\CLI\Commands\Init;
 use Minicli\App;
 use Minicli\Command\CommandCall;
 

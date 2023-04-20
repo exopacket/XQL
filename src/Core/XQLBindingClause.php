@@ -1,6 +1,6 @@
 <?php
 
-namespace App\XQL\Core;
+namespace XQL\Core;
 
 class XQLBindingClause
 {

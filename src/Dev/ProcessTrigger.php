@@ -1,6 +1,6 @@
 <?php
 
-namespace App\XQL\Dev;
+namespace XQL\Dev;
 
 class ProcessTrigger
 {

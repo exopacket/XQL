@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Core\Utils;
+namespace XQL\Core\Utils;
 
-use App\XQL\Core\Traits\InflectsText;
+use XQL\Core\Traits\InflectsText;
 
 class DynamicArr
 {

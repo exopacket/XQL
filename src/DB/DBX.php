@@ -1,13 +1,13 @@
 <?php
 
-namespace App\XQL\DB;
+namespace XQL\DB;
 
-use App\XQL\Core\Utils\DynamicValue;
-use App\XQL\Core\Utils\Env;
-use App\XQL\Core\XQLBindingClause;
-use App\XQL\Core\XQLField;
-use App\XQL\Core\XQLModel;
-use App\XQL\Core\XQLObject;
+use XQL\Core\Utils\DynamicValue;
+use XQL\Core\Utils\Env;
+use XQL\Core\XQLBindingClause;
+use XQL\Core\XQLField;
+use XQL\Core\XQLModel;
+use XQL\Core\XQLObject;
 use Exception;
 use PDO;
 

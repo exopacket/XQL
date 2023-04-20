@@ -1,9 +1,9 @@
 <?php
 
-namespace App\XQL\Core\Traits;
+namespace XQL\Core\Traits;
 
-use App\XQL\Core\XQLField;
-use App\XQL\Core\XQLObject;
+use XQL\Core\XQLField;
+use XQL\Core\XQLObject;
 use DOMDocument;
 use SimpleXMLElement;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\XQL\Cloud;
+namespace XQL\Cloud;
 
 class Cloud
 {

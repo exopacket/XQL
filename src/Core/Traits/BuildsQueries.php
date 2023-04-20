@@ -1,14 +1,14 @@
 <?php
 
-namespace App\XQL\Core\Traits;
+namespace XQL\Core\Traits;
 
-use App\XQL\Cloud\Cloud;
-use App\XQL\Core\Utils\DynamicArr;
-use App\XQL\Core\XQLBinding;
-use App\XQL\Core\XQLField;
-use App\XQL\Core\XQLModel;
-use App\XQL\Core\XQLObject;
-use App\XQL\DB\DBX;
+use XQL\Cloud\Cloud;
+use XQL\Core\Utils\DynamicArr;
+use XQL\Core\XQLBinding;
+use XQL\Core\XQLField;
+use XQL\Core\XQLModel;
+use XQL\Core\XQLObject;
+use XQL\DB\DBX;
 use Exception;
 
 trait BuildsQueries

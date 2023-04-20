@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Examples\Models;
+namespace XQL\Examples\Models;
 
-use App\XQL\Core\XQLModel;
+use XQL\Core\XQLModel;
 
 class Results extends XQLModel
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Dev;
+namespace XQL\Dev;
 
-use App\XQL\DB\DBX;
+use XQL\DB\DBX;
 
 class CreateSchema extends DBX
 {

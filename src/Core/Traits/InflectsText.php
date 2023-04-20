@@ -1,6 +1,6 @@
 <?php
 
-namespace App\XQL\Core\Traits;
+namespace XQL\Core\Traits;
 
 use Doctrine\Inflector\CachedWordInflector;
 use Doctrine\Inflector\Inflector;

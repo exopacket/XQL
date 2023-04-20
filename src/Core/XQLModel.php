@@ -1,13 +1,13 @@
 <?php
 
-namespace App\XQL\Core;
+namespace XQL\Core;
 
-use App\XQL\Cloud\Cloud;
-use App\XQL\Core\Traits\BuildsModels;
-use App\XQL\Core\Traits\BuildsQueries;
-use App\XQL\Core\Traits\GeneratesXML;
-use App\XQL\Core\Types\XQLNamingConvention;
-use App\XQL\Core\Utils\DynamicArr;
+use XQL\Cloud\Cloud;
+use XQL\Core\Traits\BuildsModels;
+use XQL\Core\Traits\BuildsQueries;
+use XQL\Core\Traits\GeneratesXML;
+use XQL\Core\Types\XQLNamingConvention;
+use XQL\Core\Utils\DynamicArr;
 use SimpleXMLElement;
 
 abstract class XQLModel extends XQLObject {

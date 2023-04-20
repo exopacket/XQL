@@ -1,6 +1,6 @@
 <?php
 
-namespace App\XQL\Core\Utils;
+namespace XQL\Core\Utils;
 
 class DynamicValue
 {

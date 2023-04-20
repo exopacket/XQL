@@ -1,13 +1,13 @@
 <?php
 
-namespace App\XQL\Core\Traits;
+namespace XQL\Core\Traits;
 
-use App\XQL\Core\Types\XQLDataType;
-use App\XQL\Core\XQLAttribute;
-use App\XQL\Core\XQLBinding;
-use App\XQL\Core\XQLField;
-use App\XQL\Core\XQLObject;
-use App\XQL\Core\XQLModel;
+use XQL\Core\Types\XQLDataType;
+use XQL\Core\XQLAttribute;
+use XQL\Core\XQLBinding;
+use XQL\Core\XQLField;
+use XQL\Core\XQLObject;
+use XQL\Core\XQLModel;
 
 trait BuildsSchemas
 {

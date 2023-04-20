@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Core;
+namespace XQL\Core;
 
-use App\XQL\Core\Types\XQLDataType;
+use XQL\Core\Types\XQLDataType;
 
 class XQLField extends XQLObject
 {

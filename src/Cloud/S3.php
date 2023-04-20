@@ -1,8 +1,8 @@
 <?php
 
-namespace App\XQL\Cloud;
+namespace XQL\Cloud;
 
-use App\XQL\Core\Utils\Env;
+use XQL\Core\Utils\Env;
 use Aws\S3\S3Client;
 
 class S3

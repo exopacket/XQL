@@ -1,6 +1,6 @@
 <?php
 
-namespace App\XQL\Core\Types;
+namespace XQL\Core\Types;
 
 enum XQLHookType
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\XQL\Core;
+namespace XQL\Core;
 
-use App\XQL\Core\Traits\BuildsSchemas;
-use App\XQL\Core\Traits\InflectsText;
-use App\XQL\Core\Types\XQLNamingConvention;
+use XQL\Core\Traits\BuildsSchemas;
+use XQL\Core\Traits\InflectsText;
+use XQL\Core\Types\XQLNamingConvention;
 use SimpleXMLElement;
 
 class XQLObject

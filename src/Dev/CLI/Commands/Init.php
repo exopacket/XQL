@@ -1,9 +1,9 @@
 <?php
 
-namespace App\XQL\Dev\CLI\Commands;
+namespace XQL\Dev\CLI\Commands;
 
-use \App\XQL\Dev\CLI\Command;
-use App\XQL\Dev\CreateSchema;
+use \XQL\Dev\CLI\Command;
+use XQL\Dev\CreateSchema;
 
 class Init extends Command
 {
