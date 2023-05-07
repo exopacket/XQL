@@ -11,7 +11,7 @@ class Env
 
     public function __construct(string $filename = null)
     {
-        $root = realpath(".");
+        $root = str_replace("/public", "", realpath("."));
         $env = (isset($filename)) ? Dotenv::createImmutable($root, $filename) : Dotenv::createImmutable($root);
         //$env->required([]);
         $env->load();

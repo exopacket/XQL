@@ -22,11 +22,20 @@ class CreateSchema extends DBX
                 'id' => [
                     'type' => 'varchar(40)'
                 ],
+                'model_key' => [
+                    'type' => 'varchar(255)'
+                ],
                 'type' => [
                     'type' => 'varchar(255)'
                 ],
                 'path' => [
                     'type' => 'varchar(255)'
+                ],
+                'last_modified' => [
+                    'type' => 'timestamp'
+                ],
+                'created_at' => [
+                    'type' => 'timestamp'
                 ]
             ],
             'primary' => 'id'
@@ -52,15 +61,18 @@ class CreateSchema extends DBX
                 'model_name' => [
                     'type' => 'varchar(255)'
                 ],
-                'table_name' => [
+                'bind_name' => [
                     'type' => 'varchar(255)'
                 ],
-                'column_name' => [
+                'reference_name' => [
                     'type' => 'varchar(255)'
                 ],
-                'field_name' => [
+                'model_field_name' => [
                     'type' => 'varchar(255)'
                 ],
+                'type' => [
+                    'type' => 'int'
+                ]
             ],
         ]);
     }

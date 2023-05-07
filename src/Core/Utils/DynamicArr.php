@@ -20,6 +20,7 @@ class DynamicArr
     public function exists(string $key): bool
     {
         if(array_key_exists($key, $this->arr)) return true;
+        if(array_key_exists(strtolower($key), $this->arr)) return true;
         $cases = $this->cases($key);
         $all = [];
         if(!isset($this->case)) {
@@ -36,6 +37,7 @@ class DynamicArr
     public function find(string $key): string|bool
     {
         if(array_key_exists($key, $this->arr)) return $key;
+        if(array_key_exists(strtolower($key), $this->arr)) return strtolower($key);
         $cases = $this->cases($key);
         $all = [];
         if(!isset($this->case)) {

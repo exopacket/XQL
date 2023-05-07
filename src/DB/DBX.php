@@ -23,13 +23,14 @@ class DBX
         self::connect();
         self::insertInstance($instance);
         self::insertHooks($instance);
+        self::insertBindings($instance);
         self::createHookTriggers($instance);
         self::createBindingTriggers($instance);
     }
 
     protected static function insertInstance(XQLModel $instance) {
         $con = self::$xql;
-        $query = "INSERT INTO instances VALUES(?, ?, ?)";
+        $query = "INSERT INTO instances VALUES(?, ?, ?, now(), now())";
         $stmt = $con->prepare($query);
         $stmt->bindValue(1, $instance->id());
         $stmt->bindValue(2, $instance->modelKey());
@@ -39,6 +40,10 @@ class DBX
     }
 
     protected static function insertHooks(XQLModel $instance) {
+
+    }
+
+    protected static function insertBindings(XQLModel $instance) {
 
     }
 
@@ -63,7 +68,9 @@ class DBX
             $columnName = $columns[$i];
             $column = $config['columns'][$columnName];
             $type = $column['type'];
-            $null = !isset($column['null']) || !(($column['null'] === 'not' || $column['null'] === 'no'));
+            $null = true;
+            if(!isset($column['null'])) $null = false;
+            else if($column['null'] === 'not' || $column['null'] === 'no') $null = false;
             $query .= "`" . $columnName . "` " . $type . (($null) ? '' : ' not') . ' null ';
         }
         if($auto) {

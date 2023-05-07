@@ -27,26 +27,40 @@ trait BuildsModels
     }
 
     //attach another model
-    protected function attach($model): XQLObject
+    protected function attach(string $model): XQLObject
     {
         $object = new $model();
-        $this->trees[] = $object;
+        $this->objects[] = $object;
+        $this->attached[] = [
+            'model_classpath' => $model,
+            'model_tree_path' => $this->className(get_called_class())
+        ];
         return $object;
     }
 
-    //"plant" an already created "tree"
-    protected function plant(XQLObject $object, string $name = null): XQLObject
-    {
-        $name = (isset($name)) ? $name : $object->name();
-        $this->trees[] = [ $name => $object ];
-        return $object;
-    }
+//    //"plant" an already created "tree"
+//    protected function plant(XQLObject $object): XQLObject
+//    {
+//        $this->objects[] = $object;
+//        return $object;
+//    }
 
     //define a new "tree" object
-    protected function root(string $name): XQLObject
+    protected function group(string $name): XQLObject
     {
         $object = new XQLObject($name);
-        $this->trees[] = $object;
+        $this->objects[] = $object;
         return $object;
     }
+
+    protected function static() : void
+    {
+        $this->static = true;
+    }
+
+    protected function final(): void
+    {
+        $this->final = true;
+    }
+
 }

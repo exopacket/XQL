@@ -22,8 +22,9 @@ class XQLObject
     protected bool $searchable = false;
     protected bool $multiple = false;
     protected bool $enforced = false;
+    protected bool $override = false;
 
-    public function __construct($name = null)
+    public function __construct($name = null, bool $overrideName = false)
     {
         $className = $this->className();
         if($className == "XQLObject" && !isset($name)) throw Exception("Basic XQLObject must be constructed with a name.");
@@ -31,6 +32,7 @@ class XQLObject
         $cases = $this->cases();
         $this->plural = $cases['plural'];
         $this->singular = $cases['singular'];
+        $this->override = $overrideName;
     }
 
     public function name(): string {
@@ -39,12 +41,12 @@ class XQLObject
 
     public function groupName()
     {
-        return $this->plural['snake'];
+        return ($this->override) ? $this->name : $this->plural['snake'];
     }
 
     public function fieldName()
     {
-        return $this->singular['snake'];
+        return ($this->override) ? $this->name : $this->singular['snake'];
     }
 
     public function labels(): array {
@@ -100,6 +102,11 @@ class XQLObject
             if ($child instanceof XQLField) $node->addChild($child->name(), $child->value());
         }
         return $node;
+    }
+
+    public function replace(int $index, XQLObject $with)
+    {
+        $this->objects[$index] = $with;
     }
 
     public function appendMultiple($value)

@@ -2,11 +2,12 @@
 
 namespace XQL\Dev\CLI;
 
-use App\XQL\Dev\CLI\Commands\Model;
-use App\XQL\Dev\CLI\Commands\Trigger;
 use XQL\Dev\CLI\Commands\Init;
 use Minicli\App;
 use Minicli\Command\CommandCall;
+use XQL\Dev\CLI\Commands\Install;
+use XQL\Dev\CLI\Commands\Model;
+use XQL\Dev\CLI\Commands\Trigger;
 
 class CommandRegistry
 {
@@ -17,7 +18,8 @@ class CommandRegistry
         return [
             'init' => Init::class,
             'model' => Model::class,
-            'trigger' => Trigger::class
+            'trigger' => Trigger::class,
+            'install' => Install::class
         ];
     }
 

@@ -2,10 +2,10 @@
 
 namespace XQL\Core\Traits;
 
-use XQL\Core\XQLField;
-use XQL\Core\XQLObject;
 use DOMDocument;
 use SimpleXMLElement;
+use XQL\Core\XQLField;
+use XQL\Core\XQLObject;
 
 trait GeneratesXML
 {
@@ -17,7 +17,7 @@ trait GeneratesXML
         foreach($data->checksums() as $attr) if(!isset($xml[$attr->name()])) $xml->addAttribute($attr->name(), $attr->get());
         foreach($data->children() as $child) {
             if(is_array($child) && count($child) === 1) $child = array_values($child)[0];
-            $this->append($child, ($child instanceof XQLField) ? $xml : $xml->addChild($child->fieldName()));
+            $this->append($child, ($child instanceof XQLField) ? $xml : $xml->addChild((($child->isMultiple()) ? $child->groupName() : $child->fieldName())));
         }
         return ($formatted) ? $this->formatXml($xml->asXML()) : $xml->asXML();
     }
@@ -44,7 +44,9 @@ trait GeneratesXML
                         $node->addChild($next->fieldName(), $next->value());
                     }
                 }
-                else if ($next instanceof XQLObject) $this->append($next, $node->addChild($next->name()));
+                else if ($next instanceof XQLObject) {
+                    $this->append($next, $node->addChild(($next->isMultiple()) ? $next->groupName() : $next->fieldName()));
+                }
             }
         } else {
             if ($child instanceof XQLField) {

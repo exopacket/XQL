@@ -22,11 +22,13 @@ trait InflectsText
         return [
             'singular' => [
                 'class' => $sClass,
+                'lowercase' => strtolower($sClass),
                 'snake' => $this->snake($sClass),
                 'camel' => $this->camel($sClass),
             ],
             'plural' => [
                 'class' => $pClass,
+                'lowercase' => strtolower($pClass),
                 'snake' => $this->snake($pClass),
                 'camel' => $this->camel($pClass),
             ],
