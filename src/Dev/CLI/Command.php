@@ -1,7 +1,7 @@
 <?php
 
 namespace XQL\Dev\CLI;
-use XQL\Core\Traits\InflectsText;
+use XQL\Core\Supporting\InflectsText;
 use Minicli\App;
 use Minicli\Command\CommandCall;
 

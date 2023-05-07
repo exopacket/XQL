@@ -4,9 +4,9 @@ namespace XQL\Core;
 
 use SimpleXMLElement;
 use XQL\Cloud\Cloud;
-use XQL\Core\Traits\BuildsModels;
-use XQL\Core\Traits\BuildsQueries;
-use XQL\Core\Traits\GeneratesXML;
+use XQL\Core\Supporting\BuildsModels;
+use XQL\Core\Supporting\BuildsQueries;
+use XQL\Core\Supporting\GeneratesXML;
 use XQL\Core\Types\XQLNamingConvention;
 use XQL\Core\Utils\DynamicArr;
 
@@ -14,6 +14,7 @@ abstract class XQLModel extends XQLObject {
 
     use BuildsQueries, BuildsModels, GeneratesXML;
 
+    protected bool $filled = false;
     protected string $id;
     protected bool $static = false;
     protected bool $final = false;
@@ -67,18 +68,21 @@ abstract class XQLModel extends XQLObject {
 
     public function populate(array $data) {
         if(array_key_exists("id", $data) && isset($data['id'])) $id = $data['id'];
-        else $id = $this->id ?? $this->generateId();
-        $this->id = $id ?? $this->id;
-        $path = "results" . "/" . $id . ".xml";
+        else $id = $this->id() ?? $this->generateId();
+        $this->id = $id;
+        $path = $this->modelKey(true) . "/" . $id . ".xml";
         $this->iterate($this, simplexml_load_string(Cloud::get($path)));
+        $this->filled = true;
     }
 
     public function fill($data)
     {
         $this->iterate($this, $data);
+        $this->filled = true;
     }
 
-    private function iterate(XQLObject $object, SimpleXMLElement $element, $dataObject = null) {
+    private function iterate(XQLObject $object, SimpleXMLElement $element, $dataObject = null)
+    {
 
         if(!isset($dataObject)) $dataObject = $this;
 
@@ -179,7 +183,7 @@ abstract class XQLModel extends XQLObject {
 
     protected function export(): string
     {
-        $string = $this->xml(true);
+        $string = $this->xmlString(true);
         return $string;
     }
 
@@ -190,14 +194,14 @@ abstract class XQLModel extends XQLObject {
 
     public function id(): string
     {
-//        if(isset($this->primary)) {
-//            $object = $this->primary['object'];
-//            if($object instanceof XQLBinding) {
-//                return $object->{$this->primary['name']};
-//            } else {
-//                return $object->id();
-//            }
-//        }
+        if(isset($this->primary)) {
+            $object = $this->primary['object'];
+            if($object instanceof XQLBinding) {
+                return $object->get($this->primary['field']);
+            } else {
+                return $object->id();
+            }
+        }
         if(!isset($this->id)) $this->generateId();
         return $this->id;
     }
@@ -235,39 +239,9 @@ abstract class XQLModel extends XQLObject {
         return $this->final;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return json_decode(json_encode(simplexml_load_string($this->export())));
-    }
-
-    public function get(string $path)
-    {
-        $path = preg_replace("/[\\\/]/", ".", $path);
-        $current = $path;
-        if(str_contains($path, ".")) {
-            $split = explode(".", $path);
-            $next = implode(".", array_splice($split, 1));
-            $current = $split[0];
-        }
-
-        $value = null;
-        if (is_numeric($current)) {
-            $current = intval($current);
-            $value = $this->values[$current];
-        } else {
-            foreach($this->children() as $child) {
-                if($child->name() == $current) {
-                    $value = $child;
-                    break;
-                }
-            }
-        }
-
-        if(isset($value)) {
-            return (isset($next)) ? $value->get($next) : $value;
-        } else {
-            return null;
-        }
     }
 
 }

@@ -36,4 +36,26 @@ class XQLField extends XQLObject
         return $this->required;
     }
 
+    public function keys(bool $dimensional = true): array
+    {
+        $res = [];
+        if($this->multiple && isset($this->values) && count($this->values) > 0) {
+            if(!$dimensional) return [$this->groupName(), $this->fieldName()];
+            $duplicates = [];
+            foreach($this->values as $value) {
+                $duplicates[] = $this->fieldName();
+            }
+            $res[$this->groupName()] = $duplicates;
+        } else {
+            $res[] = $this->fieldName();
+        }
+
+        return $res;
+    }
+
+    public function values(bool $dimensional = true): array
+    {
+        return ($this->multiple && isset($this->values) && count($this->values) > 0) ? $this->values : [$this->value];
+    }
+
 }

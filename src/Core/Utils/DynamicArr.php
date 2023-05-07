@@ -2,7 +2,7 @@
 
 namespace XQL\Core\Utils;
 
-use XQL\Core\Traits\InflectsText;
+use XQL\Core\Supporting\InflectsText;
 
 class DynamicArr
 {

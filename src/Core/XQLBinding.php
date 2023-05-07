@@ -11,14 +11,14 @@ use XQL\DB\DBX;
 class XQLBinding extends XQLObject
 {
 
-    protected string $bindFrom;
+    protected string|XQLModel $bindFrom;
     protected array $references;
     protected XQLBindingType $bindType;
     protected XQLBindingClause $clause;
     protected XQLModel $bindedModel;
     protected $callback;
 
-    public function __construct(string $name, string $from, array $references, XQLBindingType $type, XQLModel $bindedModel = null, $fn = null)
+    public function __construct(string $name, string|XQLModel $from, array $references, XQLBindingType $type, XQLModel $bindedModel = null, $fn = null)
     {
         $this->name = $name;
         $this->bindFrom = $from;
@@ -26,6 +26,7 @@ class XQLBinding extends XQLObject
         $this->bindType = $type;
         $this->clause = new XQLBindingClause();
         if(isset($bindedModel)) $this->bindedModel = $bindedModel;
+        if(isset($fn)) $this->callback = $fn;
         parent::__construct($name);
     }
 
@@ -89,7 +90,27 @@ class XQLBinding extends XQLObject
 
     private function call(XQLModel $model, XQLObject $parent, array $equals)
     {
+        $args = [];
+        if(count($equals) !== count($this->references)) {
+            throw new \Exception("Invalid number of arguments to function call binding.");
+        }
+        foreach($this->references as $param) {
+            $args[] = $equals[$param];
+        }
 
+        $fn = $this->callback;
+        if(is_string($fn)) {
+            $res = $model->{$fn}(...$args);
+        } else {
+            $res = $fn(...$args);
+        }
+
+        if(is_array($res)) {
+            $this->fromArray($res);
+        } else {
+            $field = new XQLField($res, $this->name);
+            $this->objects[] = $field;
+        }
     }
 
     private function read(XQLModel $model, XQLObject $parent, array $equals)
@@ -188,6 +209,11 @@ class XQLBinding extends XQLObject
     public function fieldName()
     {
         return $this->snake($this->name);
+    }
+
+    public function getBindType(): XQLBindingType
+    {
+        return $this->bindType;
     }
 
 }

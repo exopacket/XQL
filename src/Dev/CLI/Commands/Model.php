@@ -2,7 +2,7 @@
 
 namespace XQL\Dev\CLI\Commands;
 
-use XQL\Core\Traits\InflectsText;
+use XQL\Core\Supporting\InflectsText;
 use XQL\Core\Utils\Env;
 use XQL\Dev\CLI\Command;
 

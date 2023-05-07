@@ -45,6 +45,8 @@ class DBX
 
     protected static function insertBindings(XQLModel $instance) {
 
+
+
     }
 
     protected static function createHookTriggers(XQLModel $instance) {
@@ -69,8 +71,7 @@ class DBX
             $column = $config['columns'][$columnName];
             $type = $column['type'];
             $null = true;
-            if(!isset($column['null'])) $null = false;
-            else if($column['null'] === 'not' || $column['null'] === 'no') $null = false;
+            if($column['null'] === 'not' || $column['null'] === 'no') $null = false;
             $query .= "`" . $columnName . "` " . $type . (($null) ? '' : ' not') . ' null ';
         }
         if($auto) {
