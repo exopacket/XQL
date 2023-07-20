@@ -1,5 +1,7 @@
 # XQL
 
+<strong>This is now a public archive and has been redesigned as WindsorDB</strong>
+
 The purpose of this library is to map database tables and fields, their relations, and the analytic / use-case specific results to a single file stored in a cloud storage product like Amazon S3.
 
 <strong>In development (not stable at all, although the current priority)</strong><br><br>
